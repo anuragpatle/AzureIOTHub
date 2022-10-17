@@ -11,8 +11,11 @@ CONNECTION_STRING="HostName=ih-greenhouse.azure-devices.net;DeviceId=RaspberryPI
 DELAY = 5
 TEMPERATURE = 20.0
 HUMIDITY = 60
-PAYLOAD = '{{"temperature": {temperature}, "humidity": {humidity}, "PIR": {pir}}}'
- 
+PAYLOAD = '{{"temperature": {temperature}, "humidity": {humidity}, "moisture": {moisture}}}'
+
+soilMoistureSensorPin = 21
+moisture = "false" 
+
 async def main():
  
     try:
@@ -27,7 +30,7 @@ async def main():
         # Read data using pin GPIO17
         dhtDevice = dht11.DHT11(pin=17)
          
-        GPIO.setup(4, GPIO.IN) #PIR
+        GPIO.setup(soilMoistureSensorPin, GPIO.IN) #Soil Moisture Sensor
  
         print("Sending serivce started. Press Ctrl-C to exit")
         while True:
@@ -35,11 +38,14 @@ async def main():
             try:
                 #DHT11
                 result = dhtDevice.read()
-                #PIR
-                if GPIO.input(4):
-                    pir = 1
+                
+                #Soil Moisture
+                if GPIO.input(soilMoistureSensorPin):
+                    print ("Water NOT Detected!")
+                    moisture = "false" 
                 else:
-                    pir = 0
+                    print ("Water Detected!")
+                    moisture = "true" 
 
                 print("result.is_valid(): ", result.is_valid())
 
@@ -47,7 +53,7 @@ async def main():
                     temperature = result.temperature
                     humidity = result.humidity
  
-                    data = PAYLOAD.format(temperature=temperature, humidity=humidity, pir=pir)
+                    data = PAYLOAD.format(temperature=temperature, humidity=humidity, moisture=moisture)
                     message = Message(data)
  
                     # Send a message to the IoT hub

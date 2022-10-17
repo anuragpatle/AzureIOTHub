@@ -30,3 +30,8 @@ Reffered:
 https://social.technet.microsoft.com/wiki/contents/articles/54368.azure-cloud-services-for-raspberry-pi-4-how-to-send-sensor-data-to-azure-iot-hub.aspx
 
 
+- BCM Pin 17 as the communication channel between Raspberry Pi and DHT 11
+
+5. Setting Soil Moisture Sensor
+- VCC -> 5V, GND -> GND, SIG -> GPIO 21
+
