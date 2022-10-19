@@ -13,7 +13,7 @@ TEMPERATURE = 20.0
 HUMIDITY = 60
 PAYLOAD = '{{"temperature": {temperature}, "humidity": {humidity}, "moisture": {moisture}}}'
 
-SOIL_MOISTURE_PIN = 21 #GPIO 21 OR pin number 40
+
 FAN_PIN = 24
 SPRINKLER_PIN = 25
 moisture = "false" 
@@ -32,9 +32,8 @@ async def main():
         # Read data using pin GPIO17
         dhtDevice = dht11.DHT11(pin=17)
          
-        GPIO.setup(SOIL_MOISTURE_PIN, GPIO.IN) #Soil Moisture Sensor
-        GPIO.setup(FAN_PIN, GPIO.OUT)
-        GPIO.setup(SPRINKLER_PIN, GPIO.OUT)
+        # GPIO.setup(FAN_PIN, GPIO.OUT)
+        # GPIO.setup(SPRINKLER_PIN, GPIO.OUT)
 
  
         print("Sending serivce started. Press Ctrl-C to exit")
@@ -44,16 +43,6 @@ async def main():
                 #DHT11
                 result = dhtDevice.read()
                 
-                #Soil Moisture
-                if GPIO.input(SOIL_MOISTURE_PIN):
-                    print ("Water NOT Detected!")
-                    moisture = "false" 
-                    GPIO.output(FAN_PIN, GPIO.HIGH)
-                else:
-                    print ("Water Detected!")
-                    moisture = "true" 
-                    GPIO.output(FAN_PIN, GPIO.LOW)
-
 
                 print("result.is_valid(): ", result.is_valid())
 

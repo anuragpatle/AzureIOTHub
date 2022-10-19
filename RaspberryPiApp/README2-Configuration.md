@@ -35,3 +35,25 @@ https://social.technet.microsoft.com/wiki/contents/articles/54368.azure-cloud-se
 5. Setting Soil Moisture Sensor
 - VCC -> 5V, GND -> GND, SIG -> GPIO 21
 
+
+6. DHT 11 Setup, Method 2
+
+    Prepare the installation of CircuitPython libraries
+    To be able to easily communicate with some sensors, CircuitPython has been developed. So, before installing the specific DHT-library, we have to do some preparation work.
+
+    Open a terminal window and write following commands:
+
+    In our case, it is really important to use the latest version of Raspberry Pi OS ! Even if it takes some time, do not skip the next step !
+
+    sudo apt update
+    sudo apt full-upgrade
+    sudo apt install python3-pip
+    sudo pip3 install --upgrade setuptools
+    sudo reboot
+    Then install and run a script developed by Adafruit :
+
+    sudo pip3 install --upgrade adafruit-python-shell
+    wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+    sudo python3 raspi-blinka.py
+
+
