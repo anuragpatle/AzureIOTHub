@@ -18,7 +18,7 @@ PAYLOAD = '{{"temperature": {temperature}, "humidity": {humidity}, "moisture": {
 
 
 FAN_PIN = 24
-SPRINKLER_PIN = 25
+SPRINKLER_PIN = 26
 
 moistureSensor = MoistureSensor()
 
@@ -31,8 +31,8 @@ async def main():
         client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
 
         # # Initialize GPIO
-        # GPIO.setwarnings(False)
-        # GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)
         # GPIO.cleanup()
 
         while True:
@@ -47,6 +47,8 @@ async def main():
 
                 data = PAYLOAD.format(temperature=temp_and_humitidy[0], humidity=temp_and_humitidy[1], moisture=moisture)
                 message = Message(data)
+
+                GPIO.setup(26, GPIO.OUT)
 
                 # Send a message to the IoT hub
                 print(f"Sending message: {message}")
