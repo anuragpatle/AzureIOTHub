@@ -3,16 +3,18 @@ import time
 import board
 import RPi.GPIO as GPIO
 
-DELAY = 5
-TEMPERATURE = 20.0
-HUMIDITY = 60
-PAYLOAD = '{{"temperature": {temperature}, "humidity": {humidity}, "moisture": {moisture}}}'
 
-FAN_PIN = 24
-SPRINKLER_PIN = 25
-moisture = "false"
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.cleanup()
-GPIO.setup(26, GPIO.OUT)
+# GPIO.setmode(GPIO.BOARD)
+# GPIO.setwarnings(False)
+ledPin = 2
+GPIO.setup(ledPin, GPIO.OUT)
+
+
+for i in range(50):
+	print("LED turning on.")
+	GPIO.output(ledPin, GPIO.HIGH)
+	time.sleep(0.5)
+	print("LED turning off.")
+	GPIO.output(ledPin, GPIO.LOW)
+	time.sleep(0.5)

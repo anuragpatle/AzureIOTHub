@@ -20,7 +20,7 @@ Github token: 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
 - $ pip3 install virtualenv
 - $ virtualenv venv_greenhouse # a folder with name 'venv_greenhouse' will get created.
 - $ source /home/zf/Documents/MyProjects/Python_Virtual_Env/venv_greenhouse/bin/activate
-- (venv_greenhouse) root@raspberrypi:/home/zf/Documents/MyProjects/Python_Virtual_Env/venv_greenhouse/bin# 
+- (venv_greenhouse) root@raspberrypi:/home/zf/Documents/MyProjects/Python_Virtual_Env/venv_greenhouse/bin#
 
 
 
@@ -45,7 +45,7 @@ https://social.technet.microsoft.com/wiki/contents/articles/54368.azure-cloud-se
 
     In our case, it is really important to use the latest version of Raspberry Pi OS ! Even if it takes some time, do not skip the next step !
 
-    sudo apt update
+    sudo apt updateHi
     sudo apt full-upgrade
     sudo apt install python3-pip
     sudo pip3 install --upgrade setuptools
@@ -56,4 +56,9 @@ https://social.technet.microsoft.com/wiki/contents/articles/54368.azure-cloud-se
     wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
     sudo python3 raspi-blinka.py
 
+
+7. Pins Details:
+
+1. If temperature goes above 25`C, Led GPIO2 OR PIN3 will turn ON
+2.
 
