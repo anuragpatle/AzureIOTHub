@@ -1,7 +1,12 @@
 import time
 from azure.iot.device import IoTHubDeviceClient
+import RPi.GPIO as GPIO
 
 RECEIVED_MESSAGES = 0
+FAN_PIN = 26 # GPIO 26
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(FAN_PIN, GPIO.OUT, initial = GPIO.LOW)
+
 
 CONNECTION_STRING = "HostName=ih-greenhouse.azure-devices.net;DeviceId=smart-detector-1.0;SharedAccessKey=0Pbb0a+Of7Ii8ApmsxmVdUTe1FNwOO5pi+eXN7bxKrs="
 
@@ -14,6 +19,18 @@ def message_handler(message):
     # print data from both system and application (custom) properties
     for property in vars(message).items():
         print ("    {}".format(property))
+
+    strMsg = message.data.decode()
+
+    # print(type(strMsg))
+
+    if strMsg == 'MAKE-FAN-ON':
+        GPIO.output(FAN_PIN, GPIO.HIGH)
+        print('MAKE-FAN-ON')
+    else:
+        GPIO.output(FAN_PIN, GPIO.LOW)
+        print('MAKE-FAN-OFF')
+
 
     print("Total calls received: {}".format(RECEIVED_MESSAGES))
 

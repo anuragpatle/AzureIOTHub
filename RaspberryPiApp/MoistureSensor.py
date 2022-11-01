@@ -12,8 +12,8 @@ from adafruit_mcp3xxx.analog_in import AnalogIn
 # Soil Moisture
 class MoistureSensor:
 
-	MAX_ADC_VALUE = 65472 # Minimum conductivity between the ecletrodes (Air)
-	MIN_ADC_VALUE = 16640 # Maximum conductivity between the electrodes (Salty water)
+	MAX_ADC_VALUE = 65472 # Observed Minimum conductivity between the ecletrodes (Air)
+	MIN_ADC_VALUE = 16640 # Observed Maximum conductivity between the electrodes (Salty water)
 
 	# create the spi bus
 	spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
