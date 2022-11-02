@@ -20,7 +20,7 @@ PAYLOAD = '{{"co2Level": "380", "temperature": {temperature}, "humidityLevel": {
 # PAYLOAD = '{"temperature": {temperature}, "humidityLevel": {humidity}, "mositureLevel": {moisture}}'
 RECEIVED_MESSAGES = 0
 
-FAN_PIN = 26
+FAN_PIN = 3
 SPRINKLER_PIN = 18
 
 dht11 = DHT11()
