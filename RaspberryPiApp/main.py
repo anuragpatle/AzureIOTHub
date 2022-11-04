@@ -1,3 +1,4 @@
+
 from MoistureSensor import MoistureSensor
 from DHT11 import DHT11
 import time
@@ -8,7 +9,7 @@ import RPi.GPIO as GPIO
 import dht11
 from azure.iot.device import Message
 from azure.iot.device import IoTHubDeviceClient
-
+import subprocess
 
 CONNECTION_STRING="HostName=ih-greenhouse.azure-devices.net;DeviceId=smart-detector-1.0;SharedAccessKey=0Pbb0a+Of7Ii8ApmsxmVdUTe1FNwOO5pi+eXN7bxKrs="
 
@@ -54,6 +55,11 @@ def message_handler(message):
 
 
 async def main():
+
+    time.sleep(40)
+
+    subprocess.call(['sh', './Launcher.sh'])
+
     count = 1
     # GPIO.cleanup()
     # GPIO.setmode(GPIO.BCM)
@@ -103,6 +109,7 @@ async def main():
         # Graceful exit
         print("Shutting down IoT Hub Client")
         client.shutdown()
+
 
 
 if __name__ == '__main__':
