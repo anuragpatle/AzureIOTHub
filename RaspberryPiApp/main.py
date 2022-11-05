@@ -58,7 +58,7 @@ async def main():
 
     time.sleep(40)
 
-    subprocess.call(['sh', './Launcher.sh'])
+    subprocess.call(['sh', '/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Launcher.sh'])
 
     count = 1
     # GPIO.cleanup()
