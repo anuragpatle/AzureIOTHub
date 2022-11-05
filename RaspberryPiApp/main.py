@@ -60,7 +60,6 @@ async def main():
 
     subprocess.call(['sh', '/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Launcher.sh'])
 
-    count = 1
     # GPIO.cleanup()
     # GPIO.setmode(GPIO.BCM)
     GPIO.setup(FAN_PIN, GPIO.OUT, initial = GPIO.LOW)
