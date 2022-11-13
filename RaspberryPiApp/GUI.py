@@ -1,30 +1,6 @@
 import os
 from tkinter import *
 
-# For 5 inch display the resolution will be: 800×480
-
-# root = Tk()
-
-# Label(text='Watch Log of COW').pack()
-# log = Label(text='abc')
-# log.pack()
-
-# last_mtime = None
-# cow = './Files/SensorData.txt'
-
-# def monitor_file_change():
-#     global last_mtime
-#     mtime = os.path.getmtime(cow)
-#     if last_mtime is None or mtime > last_mtime:
-#         with open(cow) as f:
-#             log['text'] = f.read()
-#         last_mtime = mtime
-#     root.after(1000, monitor_file_change)
-
-# monitor_file_change()
-# root.mainloop()
-
-
 class Dashboard(Tk):
 
     last_mtime = None
@@ -87,24 +63,3 @@ if __name__ == "__main__":
     Dashboard.monitor_file_change()
     Dashboard.mainloop()
 
-
-# root = Tk()
-
-# Label(text='Watch Log of COW').pack()
-# log = Label(text='abc')
-# log.pack()
-
-# last_mtime = None
-# cow = './Files/SensorData.txt'
-
-# def monitor_file_change():
-#     global last_mtime
-#     mtime = os.path.getmtime(cow)
-#     if last_mtime is None or mtime > last_mtime:
-#         with open(cow) as f:
-#             log['text'] = f.read()
-#         last_mtime = mtime
-#     root.after(1000, monitor_file_change)
-
-# monitor_file_change()
-# root.mainloop()
