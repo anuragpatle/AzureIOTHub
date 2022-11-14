@@ -7,6 +7,6 @@ cd /home/pi/MyProjects/AzureIOTHub/RaspberryPiApp
 
 git pull
 
-python3 GUI.py
+python3 GUI.py &
 
 cd -

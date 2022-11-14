@@ -1,5 +1,6 @@
 
 from MoistureSensor import MoistureSensor
+from PlaySounds import PlaySounds
 from DHT11 import DHT11
 import time
 import asyncio
@@ -11,7 +12,8 @@ from azure.iot.device import Message
 from azure.iot.device import IoTHubDeviceClient
 import subprocess
 
-CONNECTION_STRING="HostName=ih-greenhouse.azure-devices.net;DeviceId=smart-detector-1.0;SharedAccessKey=0Pbb0a+Of7Ii8ApmsxmVdUTe1FNwOO5pi+eXN7bxKrs="
+
+CONNECTION_STRING = "HostName=ih-greenhouse.azure-devices.net;DeviceId=smart-detector-1.0;SharedAccessKey=0Pbb0a+Of7Ii8ApmsxmVdUTe1FNwOO5pi+eXN7bxKrs="
 
 DELAY = 5
 TEMPERATURE = 20.0
@@ -26,6 +28,9 @@ SPRINKLER_PIN = 18
 
 dht11 = DHT11()
 moistureSensor = MoistureSensor()
+playSounds = PlaySounds()
+
+playSounds.play_sound("./Files/welcome.mp3")
 
 
 def message_handler(message):
@@ -36,7 +41,7 @@ def message_handler(message):
 
     # print data from both system and application (custom) properties
     for property in vars(message).items():
-        print ("    {}".format(property))
+        print("    {}".format(property))
 
     strMsg = message.data.decode()
 
@@ -49,25 +54,25 @@ def message_handler(message):
         GPIO.output(FAN_PIN, GPIO.LOW)
         print('MAKE-FAN-OFF')
 
-
     print("Total calls received: {}".format(RECEIVED_MESSAGES))
-
 
 
 async def main():
 
-    time.sleep(40)
+    time.sleep(30)
 
-    subprocess.call(['sh', '/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Launcher.sh'])
+    subprocess.call(
+        ['sh', '/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Launcher.sh'])
 
     # GPIO.cleanup()
     # GPIO.setmode(GPIO.BCM)
-    GPIO.setup(FAN_PIN, GPIO.OUT, initial = GPIO.LOW)
-    GPIO.setup(SPRINKLER_PIN, GPIO.OUT, initial = GPIO.LOW)
+    GPIO.setup(FAN_PIN, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(SPRINKLER_PIN, GPIO.OUT, initial=GPIO.LOW)
     try:
         # Create instance of the device client
-        client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
-        print ("Starting the Python IoT Hub C2D Messaging device sample...")
+        client = IoTHubDeviceClient.create_from_connection_string(
+            CONNECTION_STRING)
+        print("Starting the Python IoT Hub C2D Messaging device sample...")
 
         # Attach the handler to the client
         client.on_message_received = message_handler
@@ -82,8 +87,14 @@ async def main():
                 temp = temp_and_humitidy[0]
                 humidity = temp_and_humitidy[1]
                 print('temp', temp, 'humidity: ', humidity)
+                fileLineVariable = str(temp) + ";" + str(moisture) + ";" + str(humidity)
 
-                data = PAYLOAD.format(temperature=temp, humidity=humidity, moisture=moisture)
+                with open('./Files/SensorData.txt','w') as f:
+                    f.write(fileLineVariable)
+                    # f.close() # No need to close I think
+
+                data = PAYLOAD.format(
+                    temperature=temp, humidity=humidity, moisture=moisture)
                 message = Message(data)
 
                 if moisture < 20:
@@ -97,18 +108,19 @@ async def main():
                 print("Message successfully sent")
 
             except Exception as error:
+
                 time.sleep(2.0)
                 print(error)
                 continue
 
-
     except Exception as error:
         print(error.args[0])
+        # close the file
+        # f.close()
     finally:
         # Graceful exit
         print("Shutting down IoT Hub Client")
         client.shutdown()
-
 
 
 if __name__ == '__main__':

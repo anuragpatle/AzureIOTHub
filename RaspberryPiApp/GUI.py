@@ -49,8 +49,8 @@ class Dashboard(Tk):
                 separatedValues = values.split(";")
                 # Temperature
                 temprature_label['text'] = separatedValues[0] + "°C"
-                humidity_label['text'] = separatedValues[1]  # Humidity
-                soil_moisture_label['text'] = separatedValues[2]  # Moisture
+                soil_moisture_label['text'] = separatedValues[1]  # Moisture
+                humidity_label['text'] = separatedValues[2]  # Humidity
             Dashboard.last_mtime = mtime
         self.after(1000, self.monitor_file_change)
 
