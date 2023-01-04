@@ -11,7 +11,7 @@ import dht11
 from azure.iot.device import Message
 from azure.iot.device import IoTHubDeviceClient
 import subprocess
-
+import math
 
 CONNECTION_STRING = "HostName=ih-greenhouse.azure-devices.net;DeviceId=smart-detector-1.0;SharedAccessKey=0Pbb0a+Of7Ii8ApmsxmVdUTe1FNwOO5pi+eXN7bxKrs="
 
@@ -30,7 +30,7 @@ dht11 = DHT11()
 moistureSensor = MoistureSensor()
 playSounds = PlaySounds()
 
-playSounds.play_sound("./Files/welcome.mp3")
+playSounds.play_sound("/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Files/welcome.mp3")
 
 
 def message_handler(message):
@@ -59,7 +59,7 @@ def message_handler(message):
 
 async def main():
 
-    time.sleep(30)
+    time.sleep(40)
 
     subprocess.call(
         ['sh', '/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Launcher.sh'])
@@ -81,15 +81,15 @@ async def main():
 
             try:
                 time.sleep(1)
-                moisture = moistureSensor.sense_moisture()
+                moisture = math.ceil(moistureSensor.sense_moisture())
 
                 temp_and_humitidy = dht11.get_dht11_sensor_data()
-                temp = temp_and_humitidy[0]
-                humidity = temp_and_humitidy[1]
+                temp = math.ceil(temp_and_humitidy[0])
+                humidity = math.ceil(temp_and_humitidy[1])
                 print('temp', temp, 'humidity: ', humidity)
                 fileLineVariable = str(temp) + ";" + str(moisture) + ";" + str(humidity)
 
-                with open('./Files/SensorData.txt','w') as f:
+                with open('/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Files/SensorData.txt','w') as f:
                     f.write(fileLineVariable)
                     # f.close() # No need to close I think
 
