@@ -22,7 +22,7 @@ class Dashboard(Tk):
         self.geometry("1024x768")
         # self.geometry("800x480")
 
-        self.attributes('-fullscreen', True)
+        # self.attributes('-fullscreen', True)
         self.resizable(True, True)
 
     def createHeaders(self):

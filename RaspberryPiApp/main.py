@@ -18,11 +18,11 @@ CONNECTION_STRING = "HostName=ih-greenhouse.azure-devices.net;DeviceId=smart-det
 DELAY = 5
 TEMPERATURE = 20.0
 HUMIDITY = 60
-PAYLOAD = '{{"co2Level": "380", "temperature": {temperature}, "humidityLevel": {humidity}, "mositureLevel": {moisture}, "lightCount": "1", "lightCapacity": "20", "lightDuration": "8", "fanStatus": "false", "lightingStatus": "false", "waterpumpStatus": "false", "dehumidifierStatus": "false", "cropInfo": {{"cropType": "Fruits", "cropName": "Litchi", "soilphValue": "4.75"}}, "deviceInfo": {{ "deviceId": "smart-detector-1.0", "deviceVersion": "1", "deviceTimestamp": "2022-10-11T12:30:03.4467715Z" }}, "locationInfo": {{ "lat": "18.516726", "lon": "73.856255", "timezone": "Coordinated Universal Time" }}  }}'
+PAYLOAD = '{{"co2Level": "380", "temperature": {temperature}, "humidityLevel": {humidity}, "mositureLevel": {moisture}, "lightCount": "1", "lightCapacity": "20", "lightDuration": "8", fanStatus: {fanStatus}, "lightingStatus": "false", "waterpumpStatus": {waterpumpStatus}, "dehumidifierStatus": "false", "cropInfo": {{"cropType": "Fruits", "cropName": "Litchi", "soilphValue": "4.75"}}, "deviceInfo": {{ "deviceId": "smart-detector-1.0", "deviceVersion": "1", "deviceTimestamp": "2022-10-11T12:30:03.4467715Z" }}, "locationInfo": {{ "lat": "18.516726", "lon": "73.856255", "timezone": "Coordinated Universal Time" }}  }}'
 # PAYLOAD = '{"co2Level": "380", "temperature": {temperature}, "humidityLevel": {humidity}, "mositureLevel": {moisture}, "lightCount": "1", "lightCapacity": "20", "lightDuration": "8", "fanStatus": "false", "lightingStatus": "false", "waterpumpStatus": "false", "dehumidifierStatus": "false", "cropInfo": { "cropType": "Fruits", "cropName": "Litchi", "soilphValue": "4.75" }, "deviceInfo": { "deviceId": "smart-detector-1.0", "deviceVersion": "1", "deviceTimestamp": "2022-10-11T12:30:03.4467715Z" }, "locationInfo": { "lat": "18.516726", "lon": "73.856255", "timezone": "Coordinated Universal Time" } }'
 # PAYLOAD = '{"temperature": {temperature}, "humidityLevel": {humidity}, "mositureLevel": {moisture}}'
 RECEIVED_MESSAGES = 0
-
+KEEP_SPRINKLER_ON = 10
 FAN_PIN = 3
 SPRINKLER_PIN = 18
 
@@ -35,6 +35,7 @@ playSounds.play_sound("/home/pi/MyProjects/AzureIOTHub/RaspberryPiApp/Files/welc
 
 def message_handler(message):
     global RECEIVED_MESSAGES
+    global KEEP_SPRINKLER_ON
     RECEIVED_MESSAGES += 1
     print("")
     print("Message received:")
@@ -50,15 +51,24 @@ def message_handler(message):
     if strMsg == 'MAKE-FAN-ON':
         GPIO.output(FAN_PIN, GPIO.HIGH)
         print('MAKE-FAN-ON')
-    else:
+    elif strMsg == 'MAKE-FAN-OFF':
         GPIO.output(FAN_PIN, GPIO.LOW)
         print('MAKE-FAN-OFF')
+    elif strMsg == 'MAKE-SPRINKLER-ON':
+        GPIO.output(SPRINKLER_PIN, GPIO.HIGH)
+        KEEP_SPRINKLER_ON = 10
+        print('MAKE-SPRINKLER-ON')
+    elif strMsg == 'MAKE-SPRINKLER-OFF':
+        GPIO.output(SPRINKLER_PIN, GPIO.LOW)
+        KEEP_SPRINKLER_ON = 10
+        print('MAKE-SPRINKLER-OFF')
+
 
     print("Total calls received: {}".format(RECEIVED_MESSAGES))
 
 
 async def main():
-
+    global KEEP_SPRINKLER_ON
     time.sleep(40)
 
     subprocess.call(
@@ -94,13 +104,20 @@ async def main():
                     # f.close() # No need to close I think
 
                 data = PAYLOAD.format(
-                    temperature=temp, humidity=humidity, moisture=moisture)
+                    temperature=temp, humidity=humidity, moisture=moisture, fanStatus=GPIO.input(FAN_PIN) , waterpumpStatus=GPIO.input(SPRINKLER_PIN))
                 message = Message(data)
 
-                if moisture < 20:
-                    GPIO.output(SPRINKLER_PIN, GPIO.HIGH)
+                # Get controlled by dashboard sprinkler On/OFF button
+                # if number of seconds is not 0.
+                # Till this, the lock will not be released
+                if KEEP_SPRINKLER_ON > 0:
+                    KEEP_SPRINKLER_ON = KEEP_SPRINKLER_ON - 1
                 else:
-                    GPIO.output(SPRINKLER_PIN, GPIO.LOW)
+                    if moisture < 20:
+                        GPIO.output(SPRINKLER_PIN, GPIO.HIGH)
+                    else:
+                        GPIO.output(SPRINKLER_PIN, GPIO.LOW)
+
 
                 # Send a message to the IoT hub
                 print(f"Sending message: {message}")
